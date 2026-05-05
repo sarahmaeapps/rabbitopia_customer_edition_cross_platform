@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"rabbitopia-834e8","appId":"1:8749398516:android:c9b631a8346b628642a1a1","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"rabbitopia-834e8","configurations":{"android":"1:8749398516:android:c9b631a8346b628642a1a1","ios":"1:8749398516:ios:1d29b8e809afd61142a1a1","macos":"1:8749398516:ios:1d29b8e809afd61142a1a1","web":"1:8749398516:web:2fb146679ac82abd42a1a1","windows":"1:8749398516:web:ec2f395f2fb73c0242a1a1"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "rabbitopia-834e8",
+          "appId": "1:8749398516:android:c9b631a8346b628642a1a1",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "rabbitopia-834e8",
+          "configurations": {
+            "android": "1:8749398516:android:c9b631a8346b628642a1a1",
+            "ios": "1:8749398516:ios:1d29b8e809afd61142a1a1",
+            "macos": "1:8749398516:ios:1d29b8e809afd61142a1a1",
+            "web": "1:8749398516:web:2fb146679ac82abd42a1a1",
+            "windows": "1:8749398516:web:ec2f395f2fb73c0242a1a1"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

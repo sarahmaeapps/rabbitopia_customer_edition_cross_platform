@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/firestore_service.dart';
 import '../models/rabbit.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/web_safe_image.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -78,17 +78,15 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> with SingleTicker
           child: ListTile(
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
+              child: WebSafeImage(
                 imageUrl: rabbit.pictureUrl,
-                placeholder: (context, url) => const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.pets),
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
               ),
             ),
-            title: Text(rabbit.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${rabbit.breed} - \$${rabbit.price.toStringAsFixed(2)}'),
+            title: Text(rabbit.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+            subtitle: Text('${rabbit.breed} - \$${rabbit.price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.white70)),
             onTap: () => Navigator.pushNamed(context, '/rabbit_detail', arguments: rabbit),
           ),
         );

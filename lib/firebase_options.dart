@@ -5,10 +5,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -16,15 +13,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -46,11 +37,43 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDX_TSGRZIfY2EaiXW_DEDIulnEcmhKzmk',
-    appId: '1:8749398516:ios:qjub2dg9bdt21so3682c9r0nlkg88t5b',
+    apiKey: 'AIzaSyCcGn9j4yf5EZewH-yRYCepx-fw4bvEdHw',
+    appId: '1:8749398516:ios:1d29b8e809afd61142a1a1',
     messagingSenderId: '8749398516',
     projectId: 'rabbitopia-834e8',
     storageBucket: 'rabbitopia-834e8.firebasestorage.app',
-    iosBundleId: 'com.sarahmaeapps.rabbitopia-ios-customer-edition',
+    iosClientId: '8749398516-sb3hphud47fefamsnhsgopnb8n6h9vgo.apps.googleusercontent.com',
+    iosBundleId: 'com.sarahmaeapps.rabbitopiaCustomerEditionCrossPlatform',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCvhZvM27GEMbJ99btGw7CLzVvcOpm6GmI',
+    appId: '1:8749398516:web:2fb146679ac82abd42a1a1',
+    messagingSenderId: '8749398516',
+    projectId: 'rabbitopia-834e8',
+    authDomain: 'rabbitopia-834e8.firebaseapp.com',
+    storageBucket: 'rabbitopia-834e8.firebasestorage.app',
+    measurementId: 'G-MGTPFF6LXR',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCcGn9j4yf5EZewH-yRYCepx-fw4bvEdHw',
+    appId: '1:8749398516:ios:1d29b8e809afd61142a1a1',
+    messagingSenderId: '8749398516',
+    projectId: 'rabbitopia-834e8',
+    storageBucket: 'rabbitopia-834e8.firebasestorage.app',
+    iosClientId: '8749398516-sb3hphud47fefamsnhsgopnb8n6h9vgo.apps.googleusercontent.com',
+    iosBundleId: 'com.sarahmaeapps.rabbitopiaCustomerEditionCrossPlatform',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCvhZvM27GEMbJ99btGw7CLzVvcOpm6GmI',
+    appId: '1:8749398516:web:ec2f395f2fb73c0242a1a1',
+    messagingSenderId: '8749398516',
+    projectId: 'rabbitopia-834e8',
+    authDomain: 'rabbitopia-834e8.firebaseapp.com',
+    storageBucket: 'rabbitopia-834e8.firebasestorage.app',
+    measurementId: 'G-VZVGRJZ5YF',
+  );
+
 }

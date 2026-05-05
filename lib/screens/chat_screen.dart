@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import '../models/message.dart';
+import '../widgets/web_safe_image.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -158,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(msg.imageUrl, height: 200, fit: BoxFit.cover),
+                                    child: WebSafeImage(imageUrl: msg.imageUrl, height: 200, fit: BoxFit.cover),
                                   ),
                                 ),
                               Text(msg.text, style: const TextStyle(color: Colors.white)),

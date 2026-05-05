@@ -15,6 +15,7 @@ class Rabbit {
   final Map<String, dynamic> pedigree; // Recursive 3-generation parent mapping
   final String? grade;
   final double? sopScore;
+  final bool forSale;
 
    Rabbit({
     required this.id,
@@ -31,16 +32,26 @@ class Rabbit {
     required this.pedigree,
     this.grade,
     this.sopScore,
+    this.forSale = false,
   });
 
   factory Rabbit.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    
+    DateTime? parseDate(dynamic date) {
+      if (date == null) return null;
+      if (date is Timestamp) return date.toDate();
+      if (date is int) return DateTime.fromMillisecondsSinceEpoch(date);
+      if (date is String) return DateTime.tryParse(date);
+      return null;
+    }
+
     return Rabbit(
       id: doc.id,
       name: data['name'] ?? '',
       earTattoo: data['earTattoo'] ?? data['eartattoo'] ?? '',
       breed: data['breed'] ?? '',
-      birthDate: (data['birthDate'] as Timestamp?)?.toDate(),
+      birthDate: parseDate(data['birthDate'] ?? data['dateOfBirth']),
       pictureUrl: data['imagePath'] ?? data['pictureUrl'] ?? '',
       price: (data['salePrice'] ?? data['price'] ?? 0).toDouble(),
       hutchId: data['hutchId'] ?? '',
@@ -50,6 +61,7 @@ class Rabbit {
       pedigree: data['pedigree'] ?? {},
       grade: data['grade'],
       sopScore: (data['sopScore'] ?? 0).toDouble(),
+      forSale: data['forSale'] ?? false,
     );
   }
 
@@ -68,6 +80,7 @@ class Rabbit {
       'pedigree': pedigree,
       'grade': grade,
       'sopScore': sopScore,
+      'forSale': forSale,
     };
   }
 }

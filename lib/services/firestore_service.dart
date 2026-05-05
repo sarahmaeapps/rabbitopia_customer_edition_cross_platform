@@ -40,7 +40,7 @@ class FirestoreService {
   Future<Map<String, List<dynamic>>> getMarketplaceData() async {
     // Parallel loading for high-speed performance
     final results = await Future.wait([
-      _db.collection('forsale').get(),
+      _db.collection('rabbits').where('forSale', isEqualTo: true).get(),
       _db.collection('marketplace').get(),
     ]);
 
@@ -158,10 +158,15 @@ class FirestoreService {
     String grade;
     if (average >= 90) {
       grade = 'A';
-    } else if (average >= 80) grade = 'B';
-    else if (average >= 70) grade = 'C';
-    else if (average >= 60) grade = 'D';
-    else grade = 'F';
+    } else if (average >= 80) {
+      grade = 'B';
+    } else if (average >= 70) {
+      grade = 'C';
+    } else if (average >= 60) {
+      grade = 'D';
+    } else {
+      grade = 'F';
+    }
 
     return {'average': average, 'grade': grade};
   }

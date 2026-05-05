@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/rabbit.dart';
 import '../services/firestore_service.dart';
 import '../services/auth_service.dart';
+import '../widgets/web_safe_image.dart';
 
 class RabbitDetailScreen extends StatelessWidget {
   final Rabbit rabbit;
@@ -18,9 +19,6 @@ class RabbitDetailScreen extends StatelessWidget {
       future: firestore.getRabbitById(rabbit.id),
       builder: (context, snapshot) {
         final displayRabbit = snapshot.data ?? rabbit;
-        final bool isOwned = displayRabbit.status == 'Purchased' || 
-                           displayRabbit.status == 'Owned' || 
-                           displayRabbit.status == 'Breeder';
 
         return Scaffold(
           appBar: AppBar(
@@ -46,19 +44,27 @@ class RabbitDetailScreen extends StatelessWidget {
                   Center(
                     child: Hero(
                       tag: displayRabbit.id,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Container(
-                          color: Colors.black45,
-                          child: Image.network(
-                            displayRabbit.pictureUrl, 
-                            height: 200, 
-                            width: double.infinity, 
-                            fit: BoxFit.cover, 
-                            errorBuilder: (c, e, s) => const Icon(Icons.pets, size: 100, color: Colors.white)
+                      child: GestureDetector(
+                        onTap: () => _showFullScreenImage(context, displayRabbit.pictureUrl),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Container(
+                            color: Colors.black45,
+                            constraints: const BoxConstraints(maxHeight: 400),
+                            child: WebSafeImage(
+                              imageUrl: displayRabbit.pictureUrl,
+                              width: double.infinity,
+                              fit: BoxFit.contain, // Shows the whole picture without cropping
+                            ),
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Tap image to zoom', style: TextStyle(color: Colors.white54, fontSize: 12)),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -70,7 +76,7 @@ class RabbitDetailScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 20),
-                  if (!isOwned) ...[
+                  if (displayRabbit.forSale) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -196,6 +202,41 @@ class RabbitDetailScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showFullScreenImage(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(10),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: InteractiveViewer(
+                panEnabled: true,
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: WebSafeImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

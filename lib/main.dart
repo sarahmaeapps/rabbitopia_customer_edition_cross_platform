@@ -15,12 +15,14 @@ import 'screens/rabbit_detail_screen.dart';
 import 'screens/sop_history_screen.dart';
 import 'screens/sop_detail_screen.dart';
 import 'screens/chat_screen.dart';
+import 'screens/home_website.dart';
 import 'models/rabbit.dart';
 import 'models/sop_evaluation.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   // Ensure Firebase is initialized
   try {
     await Firebase.initializeApp(
@@ -30,8 +32,12 @@ void main() async {
     debugPrint('Firebase init error: $e');
   }
   
-  // Request permissions on start
-  await PermissionService().requestAllPermissions();
+  // Request permissions on start (handled safely in PermissionService for web)
+  try {
+    await PermissionService().requestAllPermissions();
+  } catch (e) {
+    debugPrint('Permission request error: $e');
+  }
 
   runApp(
     MultiProvider(
@@ -60,9 +66,11 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: const AuthWrapper(),
+      home: const HomeWebsite(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/auth':
+            return MaterialPageRoute(builder: (_) => const AuthWrapper());
           case '/dashboard':
             return MaterialPageRoute(builder: (_) => const DashboardScreen());
           case '/my_rabbits':

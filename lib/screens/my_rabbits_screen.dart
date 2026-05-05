@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import '../models/rabbit.dart';
+import '../widgets/web_safe_image.dart';
 
 class MyRabbitsScreen extends StatelessWidget {
   const MyRabbitsScreen({super.key});
@@ -17,7 +19,7 @@ class MyRabbitsScreen extends StatelessWidget {
         title: const Text('My Rabbits'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        bottom: PreferredSize(
+        bottom: kIsWeb ? null : PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Container(
             color: Colors.black26,
@@ -41,7 +43,7 @@ class MyRabbitsScreen extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 110),
+          padding: EdgeInsets.only(top: kIsWeb ? 80 : 110),
           child: FutureBuilder<List<Rabbit>>(
             future: firestore.getMyRabbits(user?.email ?? ''),
             builder: (context, snapshot) {
@@ -65,10 +67,18 @@ class MyRabbitsScreen extends StatelessWidget {
                     color: Colors.black45,
                     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blueGrey,
-                        backgroundImage: rabbit.pictureUrl.isNotEmpty ? NetworkImage(rabbit.pictureUrl) : null,
-                        child: rabbit.pictureUrl.isEmpty ? const Icon(Icons.pets, color: Colors.white) : null,
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blueGrey,
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: WebSafeImage(
+                          imageUrl: rabbit.pictureUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       title: Text(rabbit.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                       subtitle: Text('ID: ${rabbit.earTattoo} | ${rabbit.breed}', style: const TextStyle(color: Colors.white70)),
