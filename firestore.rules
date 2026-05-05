@@ -1,0 +1,112 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: rabbits
+// Fields:
+//   - forSale: bool (required) - if true, publicly readable
+//   - name: string
+//   - breed: string
+//   - price: number
+//   - pictureUrl: string
+//
+// Collection: marketplace
+// Fields:
+//   - name: string
+//   - description: string
+//   - price: number
+//
+// Collection: sales
+// Fields:
+//   - customerId: string (email)
+//   - rabbitId: string
+//
+// Collection: wishlist (subcollection of users)
+// Collection: messages (subcollection of users)
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(email) {
+      return isAuthenticated() && request.auth.token.email.lower() == email.lower();
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Anyone can read rabbits that are for sale.
+    // This fixes the Marketplace permission error for unauthenticated visitors.
+    match /rabbits/{rabbitId} {
+      allow read: if resource.data.forSale == true || isAuthenticated();
+      allow write: if false;
+    }
+
+    // Publicly accessible marketplace items (supplies, etc.)
+    match /marketplace/{itemId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Sales: Only the customer who bought the rabbit can see the sale record
+    match /sales/{saleId} {
+      allow read: if isAuthenticated() &&
+        request.auth.token.email.lower() == resource.data.customerId.lower();
+      allow write: if false;
+    }
+
+    // Wishlist: Only the user can access their own wishlist
+    match /wishlist/{email} {
+      allow read, write: if isOwner(email);
+      match /rabbits/{rabbitId} {
+        allow read, write: if isOwner(email);
+      }
+    }
+
+    // Messaging: Only the user can access their own chat messages
+    match /messages/{email} {
+      allow read, write: if isOwner(email);
+      match /chat/{chatId} {
+        allow read, write: if isOwner(email);
+      }
+    }
+
+    // SOP Evaluations, Medical, Weigh-ins:
+    // These need to be readable for Marketplace stats to display correctly.
+    match /sop_evaluations/{evalId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /weigh_ins/{weighId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /medical/{medId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // User Profile
+    match /customers/{email} {
+      allow read, write: if isOwner(email);
+    }
+
+    // Local Data Overrides
+    match /local_data/{email} {
+      allow read, write: if isOwner(email);
+      match /rabbits/{rabbitId} {
+        allow read, write: if isOwner(email);
+      }
+    }
+  }
+}

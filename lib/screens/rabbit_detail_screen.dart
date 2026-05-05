@@ -81,7 +81,9 @@ class RabbitDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton.icon(
-                          onPressed: () => firestore.addToWishlist(userEmail, displayRabbit),
+                          onPressed: userEmail.isEmpty 
+                            ? () => Navigator.pushNamed(context, '/auth')
+                            : () => firestore.addToWishlist(userEmail, displayRabbit),
                           icon: const Icon(Icons.favorite_border),
                           label: const Text('Interested'),
                           style: ElevatedButton.styleFrom(
@@ -90,7 +92,9 @@ class RabbitDetailScreen extends StatelessWidget {
                           ),
                         ),
                         ElevatedButton.icon(
-                          onPressed: () => Navigator.pushNamed(context, '/chat'),
+                          onPressed: userEmail.isEmpty
+                            ? () => Navigator.pushNamed(context, '/auth')
+                            : () => Navigator.pushNamed(context, '/chat'),
                           icon: const Icon(Icons.chat),
                           label: const Text('Contact Us'),
                           style: ElevatedButton.styleFrom(
